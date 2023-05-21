@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const {MongoClient, ServerApiVersion} = require('mongodb');
+const {MongoClient, ServerApiVersion, ObjectId} = require('mongodb');
 require('dotenv').config()
 const app = express();
 const port = process.env.PORT || 5000;
@@ -49,6 +49,35 @@ async function run () {
             res.send(result);
         });
 
+
+        app.get('/toyDetails/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)}
+
+            const options = {
+                projection: {title: 1, price: 1, _id: 1, image: 1, description: 1, sellerName: 1, postedBy: 1, rating: 1, quantity: 1}
+            }
+
+            const result = await dollsCollection.findOne(query, options);
+            res.send(result);
+        })
+
+        app.put("/updateToy/:id", async (req, res) => {
+            const id = req.params.id;
+            const body = req.body;
+            console.log(body, id);
+            const filter = {_id: new ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    price: body.price,
+                    quantity: body.quantity,
+                    description: body.description,
+                },
+            };
+            const result = await dollsCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        });
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
