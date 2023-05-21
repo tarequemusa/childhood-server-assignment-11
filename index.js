@@ -43,13 +43,14 @@ async function run () {
 
         app.get("/alltoys/:disney", async (req, res) => {
             console.log(req.params.category);
-            if(req.params.disney == "princess") {
-                const result = await dollsCollection.find({category: req.params.disney}).toArray();
-                console.log(result);
-                return res.send(result);
-            }
-            const result = await dollsCollection.find({}).toArray();
-            res.send(result);
+            const result = await dollsCollection.find({category: req.params.disney}).toArray();
+            console.log(result);
+            return res.send(result);
+        });
+
+        app.get("/alltoys", async (req, res) => {
+            const result = await dollsCollection.find().toArray();
+            return res.send(result);
         });
 
     } finally {
