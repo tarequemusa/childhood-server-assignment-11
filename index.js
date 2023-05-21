@@ -41,12 +41,16 @@ async function run () {
         });
 
 
-        app.get("/alltoys", async (req, res) => {
+        app.get("/alltoys/:disney", async (req, res) => {
+            console.log(req.params.category);
+            if(req.params.disney == "princess") {
+                const result = await dollsCollection.find({category: req.params.disney}).toArray();
+                console.log(result);
+                return res.send(result);
+            }
             const result = await dollsCollection.find({}).toArray();
-            res.send(result)
-        })
-
-
+            res.send(result);
+        });
 
     } finally {
         // Ensures that the client will close when you finish/error
