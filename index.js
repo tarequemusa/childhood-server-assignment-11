@@ -30,6 +30,26 @@ async function run () {
         // Send a ping to confirm a successful connection
         const db = client.db("childhood_toys");
         const dollsCollection = db.collection("childhood");
+
+        const indexKeys = {title: 1, category: 1}; // Replace field1 and field2 with your actual field names
+        const indexOptions = {name: "titleCategory"}; // Replace index_name with the desired index name
+        const result = await dollsCollection.createIndex(indexKeys, indexOptions);
+
+
+        app.get("/getToysByText/:text", async (req, res) => {
+            const text = req.params.text;
+            const result = await dollsCollection
+                .find({
+                    $or: [
+                        {title: {$regex: text, $options: "i"}},
+                        {category: {$regex: text, $options: "i"}},
+                    ],
+                })
+                .toArray();
+            res.send(result);
+        });
+
+
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
 
