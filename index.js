@@ -40,7 +40,6 @@ async function run () {
             res.send = result;
         });
 
-
         app.get("/alltoys/:disney", async (req, res) => {
             console.log(req.params.category);
             const result = await dollsCollection.find({category: req.params.disney}).toArray();
@@ -52,6 +51,14 @@ async function run () {
             const result = await dollsCollection.find().toArray();
             return res.send(result);
         });
+
+
+        app.get("/myToys/:email", async (req, res) => {
+            console.log(req.params.email);
+            const result = await dollsCollection.find({postedBy: req.params.email}).toArray();
+            res.send(result);
+        })
+
 
     } finally {
         // Ensures that the client will close when you finish/error
