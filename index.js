@@ -114,11 +114,12 @@ async function run () {
             res.send(result);
         })
 
-        app.delete('/singleToy/:id', (req, res) => {
+        app.delete('/singleToy/:id', async (req, res) => {
             const id = req.params.id;
             console.log('Please Delete from database', id);
             const query = {_id: new ObjectId(id)}
-            const result = await
+            const result = await dollsCollection.deleteOne(query);
+            res.send(result);
         })
 
 
