@@ -7,7 +7,13 @@ const port = process.env.PORT || 5000;
 
 
 //middleware
-app.use(cors());
+const corsOptions = {
+    origin: '*',
+    credentials: true,
+    optionSuccessStatus: 200,
+}
+
+app.use(cors(corsOptions))
 app.use(express.json());
 
 console.log(process.env.DB_PASS);
@@ -106,6 +112,13 @@ async function run () {
             console.log(req.params.email);
             const result = await dollsCollection.find({postedBy: req.params.email}).toArray();
             res.send(result);
+        })
+
+        app.delete('/singleToy/:id', (req, res) => {
+            const id = req.params.id;
+            console.log('Please Delete from database', id);
+            const query = {_id: new ObjectId(id)}
+            const result = await
         })
 
 
