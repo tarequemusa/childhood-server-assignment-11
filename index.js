@@ -103,7 +103,7 @@ async function run () {
         });
 
         app.get("/alltoys", async (req, res) => {
-            const result = await dollsCollection.find().toArray();
+            const result = await dollsCollection.find().limit(20).toArray();
             return res.send(result);
         });
 
