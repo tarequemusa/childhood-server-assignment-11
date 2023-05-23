@@ -37,13 +37,12 @@ async function run () {
         const db = client.db("childhood_toys");
         const dollsCollection = db.collection("childhood");
 
-        const indexKeys = {title: 1, category: 1}; // Replace field1 and field2 with your actual field names
-        const indexOptions = {name: "titleCategory"}; // Replace index_name with the desired index name
-        const result = await dollsCollection.createIndex(indexKeys, indexOptions);
-
 
         app.get("/getToysByText/:text", async (req, res) => {
             const text = req.params.text;
+            const indexKeys = {title: 1, category: 1}; // Replace field1 and field2 with your actual field names
+            const indexOptions = {name: "titleCategory"}; // Replace index_name with the desired index name
+            const result2 = await dollsCollection.createIndex(indexKeys, indexOptions);
             const result = await dollsCollection
                 .find({
                     $or: [
