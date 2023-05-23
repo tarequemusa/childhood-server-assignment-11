@@ -67,21 +67,44 @@ async function run () {
             res.send(result);
         })
 
-        app.put("/updateToy/:id", async (req, res) => {
+        app.get("/updateToy/:id", async (req, res) => {
             const id = req.params.id;
-            const body = req.body;
-            const filter = {_id: new ObjectId(id)};
-            const options = {upsert: true};
-            const updateDoc = {
-                $set: {
-                    price: body.price,
-                    quantity: body.quantity,
-                    description: body.description,
-                },
-            };
-            const result = await dollsCollection.updateOne(filter, updateDoc);
+            const query = {_id: new ObjectId(id)}
+            const result = await dollsCollection.findOne(query);
             res.send(result);
-        });
+        })
+
+        app.put("/updateToyInfo/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: new ObjectId(id)}
+            const options = {upsert: true};
+            const updatedToy = req.body;
+            const toy = {
+                $set: {
+                    price: updatedToy.price,
+                    quantity: updatedToy.quantity,
+                    description: updatedToy.description,
+                }
+            }
+            const result = await dollsCollection.updateOne(filter, toy, options);
+            res.send(result);
+        })
+
+        // app.put("/updateToy/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const body = req.body;
+        //     const filter = {_id: new ObjectId(id)};
+        //     const options = {upsert: true};
+        //     const updateDoc = {
+        //         $set: {
+        //             price: body.price,
+        //             quantity: body.quantity,
+        //             description: body.description,
+        //         },
+        //     };
+        //     const result = await dollsCollection.updateOne(filter, updateDoc);
+        //     res.send(result);
+        // });
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
