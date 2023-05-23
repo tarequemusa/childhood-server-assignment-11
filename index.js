@@ -16,7 +16,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json());
 
-console.log(process.env.DB_PASS);
+
 
 const uri = `mongodb+srv://${ process.env.DB_USER }:${ process.env.DB_PASS }@cluster0.g5abh6e.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -71,7 +71,6 @@ async function run () {
         app.put("/updateToy/:id", async (req, res) => {
             const id = req.params.id;
             const body = req.body;
-            console.log(body, id);
             const filter = {_id: new ObjectId(id)};
             const options = {upsert: true};
             const updateDoc = {
@@ -91,14 +90,11 @@ async function run () {
         app.post("/addToy", async (req, res) => {
             const body = req.body;
             const result = await dollsCollection.insertOne(body);
-            console.log(result);
             res.send = result;
         });
 
         app.get("/alltoys/:disney", async (req, res) => {
-            console.log(req.params.category);
             const result = await dollsCollection.find({category: req.params.disney}).toArray();
-            console.log(result);
             return res.send(result);
         });
 
@@ -109,14 +105,12 @@ async function run () {
 
 
         app.get("/myToys/:email", async (req, res) => {
-            console.log(req.params.email);
-            const result = await dollsCollection.find({postedBy: req.params.email}).toArray();
+            const result = await dollsCollection.find({postedBy: req.params.email}).sort({price: -1}).toArray();
             res.send(result);
         })
 
         app.delete('/singleToy/:id', async (req, res) => {
             const id = req.params.id;
-            console.log('Please Delete from database', id);
             const query = {_id: new ObjectId(id)}
             const result = await dollsCollection.deleteOne(query);
             res.send(result);
